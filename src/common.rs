@@ -2515,7 +2515,23 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
+fn set_default_server() {
+    Config::set_option(
+        keys::OPTION_CUSTOM_RENDEZVOUS_SERVER.into(),
+        "rdp.qduwo.xyz".into(),
+    );
+    Config::set_option(
+        keys::OPTION_API_SERVER.into(),
+        "http://rdp.qduwo.xyz:21114".into(),
+    );
+    Config::set_option(
+        keys::OPTION_KEY.into(),
+        "1jh4d3uAyVK8N31Ra9PZiXboiWUOGINtD4CmUcGf0Cw=".into(),
+    );
+}
+
 pub fn load_custom_client() {
+    set_default_server();
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());

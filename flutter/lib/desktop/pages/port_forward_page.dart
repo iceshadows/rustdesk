@@ -7,9 +7,10 @@ import 'package:flutter_hbb/desktop/widgets/tabbar_widget.dart';
 import 'package:flutter_hbb/models/model.dart';
 import 'package:flutter_hbb/models/platform_model.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const double _kColumn1Width = 30;
-const double _kColumn4Width = 100;
+const double _kColumn4Width = 120;
 const double _kRowHeight = 60;
 const double _kTextLeftMargin = 20;
 
@@ -272,13 +273,26 @@ class _PortForwardPageState extends State<PortForwardPage>
         text(pf.remotePort.toString()),
         SizedBox(
           width: _kColumn4Width,
-          child: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () async {
-              await bind.sessionRemovePortForward(
-                  sessionId: _ffi.sessionId, localPort: pf.localPort);
-              refreshTunnelConfig();
-            },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.open_in_new),
+                tooltip: 'Open in browser',
+                onPressed: () => launchUrl(
+                  Uri.parse('http://127.0.0.1:${pf.localPort}'),
+                  mode: LaunchMode.externalApplication,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () async {
+                  await bind.sessionRemovePortForward(
+                      sessionId: _ffi.sessionId, localPort: pf.localPort);
+                  refreshTunnelConfig();
+                },
+              ),
+            ],
           ),
         ),
       ]),
